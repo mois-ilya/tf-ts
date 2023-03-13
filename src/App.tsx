@@ -1,23 +1,30 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 
 function App() {
+  const [selectedImage, setSelectedImage] = useState<HTMLImageElement | null>(null);
+
+  function handleImageChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const imgInput = event.target
+    if (!imgInput.files || !imgInput.files[0]) {
+      return
+    }
+
+    const newImage = new Image();
+    newImage.src = URL.createObjectURL(imgInput.files[0]);
+    newImage.onload = () => onLoadImage(newImage);
+  }
+
+  function onLoadImage(newImage: HTMLImageElement) {
+    setSelectedImage(newImage);
+
+  };
+
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <input type="file" onChange={handleImageChange}/>
+        {selectedImage && <img src={selectedImage.src} alt="Selected" />}
       </header>
     </div>
   );
