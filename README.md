@@ -1,6 +1,6 @@
 # About the Project
 
-This is my pet project on React with TypeScript where I'm testing the possibilities of running Tensorflow models in the browser, as well as playing around with the GPT-3 API.
+This is my pet project on React with TypeScript where I'm testing the possibilities of running Tensorflow models in the browser, as well as playing around with the GPT-3 API. [demo](https://tf-ts.mois.pro)
 
 # Requirements
 
