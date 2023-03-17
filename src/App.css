@@ -19,6 +19,7 @@
   background-color: #282c34;
   padding: 20px;
   box-sizing: border-box;
+  color: #61dafb;
 }
 
 /* .App-header {
@@ -36,6 +37,8 @@
   grid-area: predict;
   /* height: 50vh; */
   color: #282c34;
+  text-align: left;
+  padding: 20px;
 }
 
 .image {

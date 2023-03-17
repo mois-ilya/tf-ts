@@ -3,6 +3,7 @@ import axios from 'axios';
 import './App.css';
 import * as tf from '@tensorflow/tfjs';
 import * as mobilenet from '@tensorflow-models/mobilenet';
+import Typewriter from 'typewriter-effect';
 
 interface Prediction {
   className: string;
@@ -15,7 +16,9 @@ function App() {
   const [selectedImage, setSelectedImage] = useState<HTMLImageElement | null>(null);
   const [model, setModel] = useState<mobilenet.MobileNet | null>(null);
   const [predictions, setPredictions] = useState<Predictions | null>(null);
-  const [descriptions, setDescriptions] = useState<Array<string | null> | null>(null);
+  const [numberOfPredictions, setNumberOfPredictions] = useState<number>(0); // [1, 2, 3]
+  const [prediction, setPrediction] = useState<Prediction | null>(null);
+  const [descriptions, setDescriptions] = useState<Array<string> | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
@@ -41,6 +44,10 @@ function App() {
 
   function onLoadImage(newImage: HTMLImageElement) {
     setSelectedImage(newImage);
+    setDescriptions(null);
+    setPredictions(null);
+    setPrediction(null);
+    setNumberOfPredictions(0);
 
     if (!model) {
       return
@@ -63,6 +70,7 @@ function App() {
 
       Promise.all(predictionPromises).then((values) => {
         setDescriptions(values);
+        setPrediction(_predictions[numberOfPredictions]);
       }).catch(() => {
         const values = ["Test long description for the first prediction", "Test long description for the second prediction", "Test long description for the third prediction"];
         setDescriptions(values);
@@ -82,13 +90,23 @@ function App() {
         </div>
         <div className="predictions">
           {
-            predictions && predictions.map((object, i) => {
-              return <div key={i}>
-                {object.className}
-                {object.probability}
-                {descriptions && descriptions[i]}
-              </div>;
-            })
+            prediction && <div>
+              className - {prediction.className} <br/>
+              probability - {prediction.probability}
+              <br/>
+              <br/>
+              {descriptions && descriptions[numberOfPredictions] !== null && <Typewriter
+                  options={{delay: 20}}
+                  onInit={(typewriter) => {
+                    typewriter.typeString(descriptions[numberOfPredictions])
+                      .callFunction(() => {
+                        console.log('String typed out!');
+                      })
+                      .start();
+                  }}
+                />
+              }
+            </div>
           }
         </div>
     </div>
