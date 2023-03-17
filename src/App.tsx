@@ -15,13 +15,15 @@ function App() {
   const [selectedImage, setSelectedImage] = useState<HTMLImageElement | null>(null);
   const [model, setModel] = useState<mobilenet.MobileNet | null>(null);
   const [predictions, setPredictions] = useState<Predictions | null>(null);
-  const [descriptions, setDescriptions] = useState<Array<string> | null>(null);
+  const [descriptions, setDescriptions] = useState<Array<string | null> | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     async function loadModel() {
       await tf.setBackend('webgl');
       const loadedModel = await mobilenet.load();
       setModel(loadedModel);
+      setLoading(false);
     }
     loadModel();
   }, []);
@@ -47,29 +49,48 @@ function App() {
     model.classify(newImage).then((_predictions: Predictions) => {
       setPredictions(_predictions);
 
-      axios.post('https://tf-ex.mois.pro/gpt', {
-        prompt: _predictions
-      })
-      .then(function (response) {
-        setDescriptions(response.data)
-      })
-      .catch(function (error) {
-        console.log(error);
+      const predictionPromises:Promise<string>[] = _predictions.map((prediction) => {
+        return axios.post('https://tf-ex.mois.pro/gpt', {
+          prompt: prediction
+        })
+        .then(function (response) {
+          return response.data;
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
       });
+
+      Promise.all(predictionPromises).then((values) => {
+        setDescriptions(values);
+      }).catch(() => {
+        const values = ["Test long description for the first prediction", "Test long description for the second prediction", "Test long description for the third prediction"];
+        setDescriptions(values);
+      })
     });
   };
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <input type="file" onChange={handleImageChange}/>
-        {selectedImage && <img src={selectedImage.src} alt="Selected" />}
-        {
-          predictions && descriptions && predictions.map((object, i) => {
-            return <div key={i}>{object.className} {object.probability} {descriptions[i]}</div>;
-          })
-        }
-      </header>
+    <div className="app">
+        <div className="title">
+          <h1>TensorFlow.js Image Classifier</h1>
+          <input type="file" onChange={handleImageChange} disabled={loading}/>
+          {loading && <p>Loading model...</p>}
+        </div>
+        <div className="image">
+          {selectedImage && <img src={selectedImage.src} alt="Selected" />}
+        </div>
+        <div className="predictions">
+          {
+            predictions && predictions.map((object, i) => {
+              return <div key={i}>
+                {object.className}
+                {object.probability}
+                {descriptions && descriptions[i]}
+              </div>;
+            })
+          }
+        </div>
     </div>
   );
 }
