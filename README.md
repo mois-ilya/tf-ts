@@ -1,46 +1,27 @@
-# Getting Started with Create React App
+# About the Project
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This is my pet project on React with TypeScript where I'm testing the possibilities of running Tensorflow models in the browser, as well as playing around with the GPT-3 API.
 
-## Available Scripts
+# Requirements
 
-In the project directory, you can run:
+To run this project, you will need:
 
-### `npm start`
+- Node.js installed on your machine
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+# Getting Started
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+To get started with this project, follow these steps:
 
-### `npm test`
+1. Clone this repository to your local machine
+2. Open a terminal and navigate to the project directory
+3. Run `npm install` to install the required dependencies
+4. Run `npm start` to start the development server
+5. Open your web browser and navigate to `http://localhost:3000`
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+# Usage
 
-### `npm run build`
+To see a demo of this project, please visit the website [tf-ts.mois.pro](https://tf-ts.mois.pro) and interact with the UI. You can test the Tensorflow models by uploading images and running predictions, and you can interact with the GPT-3 API by entering text prompts and generating responses describing what the image recognition model has recognized in the uploaded image.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+# License
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+This project is licensed under the MIT License. See the `LICENSE` file for more information.
