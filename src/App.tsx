@@ -18,7 +18,7 @@ function App() {
   const [predictions, setPredictions] = useState<Predictions | null>(null);
   const [numberOfPredictions, setNumberOfPredictions] = useState<number>(0); // [1, 2, 3]
   const [prediction, setPrediction] = useState<Prediction | null>(null);
-  const [descriptions, setDescriptions] = useState<Array<string> | null>(null);
+  const [description, setDescription] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
@@ -44,7 +44,7 @@ function App() {
 
   function onLoadImage(newImage: HTMLImageElement) {
     setSelectedImage(newImage);
-    setDescriptions(null);
+    setDescription(null);
     setPredictions(null);
     setPrediction(null);
     setNumberOfPredictions(0);
@@ -55,26 +55,40 @@ function App() {
 
     model.classify(newImage).then((_predictions: Predictions) => {
       setPredictions(_predictions);
+      setPrediction(_predictions[0]);
+      setDescription("");
 
-      const predictionPromises:Promise<string>[] = _predictions.map((prediction) => {
-        return axios.post('https://tf-ex.mois.pro/gpt', {
+
+      // const predictionPromises:Promise<string>[] = _predictions.map((prediction) => {
+      //   return axios.post('https://tf-ex.mois.pro/gpt', {
+      //     prompt: prediction
+      //   })
+      //   .then(function (response) {
+      //     return response.data;
+      //   })
+      //   .catch(function (error) {
+      //     console.log(error);
+      //   });
+      // });
+
+      const prediction = _predictions[numberOfPredictions];
+      axios.post('https://tf-ex.mois.pro/gpt', {
           prompt: prediction
         })
         .then(function (response) {
-          return response.data;
+          setDescription(response.data);
         })
         .catch(function (error) {
           console.log(error);
         });
-      });
 
-      Promise.all(predictionPromises).then((values) => {
-        setDescriptions(values);
-        setPrediction(_predictions[numberOfPredictions]);
-      }).catch(() => {
-        const values = ["Test long description for the first prediction", "Test long description for the second prediction", "Test long description for the third prediction"];
-        setDescriptions(values);
-      })
+      // Promise.all(predictionPromises).then((values) => {
+      //   setDescriptions(values);
+      //   // setPrediction(_predictions[numberOfPredictions]);
+      // }).catch(() => {
+      //   const values = ["Test long description for the first prediction", "Test long description for the second prediction", "Test long description for the third prediction"];
+      //   setDescriptions(values);
+      // })
     });
   };
 
@@ -95,10 +109,10 @@ function App() {
               probability - {prediction.probability}
               <br/>
               <br/>
-              {descriptions && descriptions[numberOfPredictions] !== null && <Typewriter
+              {description && <Typewriter
                   options={{delay: 20}}
                   onInit={(typewriter) => {
-                    typewriter.typeString(descriptions[numberOfPredictions])
+                    typewriter.typeString(description)
                       .callFunction(() => {
                         console.log('String typed out!');
                       })
